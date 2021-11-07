@@ -82,7 +82,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
 /////////////////////////////////////
-  var sized_box = SizedBox(height: SizeConfig.screenHeight * 0.02);
+  var sized_box = SizedBox(height: SizeConfig.screenHeight * 0.03);
 ////////////email or phone form field
   TextFormField emailOrPhoneField() {
     return TextFormField(

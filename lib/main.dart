@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         //   splashTransition: SplashTransition.fadeTransition,
         //   nextScreen: ProductsOverviewScreen(),
         //   backgroundColor: const Color(0xff001a41),
-        // ),
+        // ),flutter pub run flutter_launcher_icons:main -f
         routes: Routes.routes,
       ),
     );

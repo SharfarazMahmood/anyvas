@@ -27,10 +27,11 @@ class Body extends StatelessWidget {
                   "Login with email/phone & password \nor Continue with social account",
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: SizeConfig.screenHeight * 0.08),
+                SizedBox(height: SizeConfig.screenHeight * 0.04),
                 LoginForm(),
+                SizedBox(height: SizeConfig.screenHeight * 0.02),
                 socialIcons.iconsRow,
-                // SizedBox(height: proportionateHeight(20)),
+                SizedBox(height: proportionateHeight(20)),
                 AlterLoginSignup(
                   text: "Don't have an account?",
                   route: SignupScreen.routeName,

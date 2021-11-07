@@ -49,7 +49,7 @@ class Body extends StatelessWidget {
                 socialIcons.iconsRow,
                 SizedBox(height: proportionateHeight(20)),
                 AlterLoginSignup(
-                  text: "Alredy a Member?",
+                  text: "Already a Member?",
                   route: LoginScreen.routeName,
                   routeText: "Login",
                 )

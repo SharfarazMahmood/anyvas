@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 //////// import of config files ////////
+import 'package:anyvas/configs/constants.dart';
 import '../configs/size_config.dart';
 
 Row iconsRow = Row(
@@ -36,7 +37,7 @@ class SocialIcon extends StatelessWidget {
         height: proportionateHeight(55),
         width: proportionateWidth(55),
         decoration: BoxDecoration(
-          color: Color(0xFFF5F6F9),
+          color: socialIconBackgroundColor,
           shape: BoxShape.circle,
         ),
         child: SvgPicture.asset(icon!),

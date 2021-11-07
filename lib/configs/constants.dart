@@ -12,6 +12,7 @@ const kPrimaryGradientColor = LinearGradient(
 const kSecondaryColor = Color(0xffe99800);
 const kSecondaryColor2 = Color(0xFF979797);
 const kTextColor = Color(0xFF757575);
+const socialIconBackgroundColor = Color(0xffededed);
 
 const kAnimationDuration = Duration(milliseconds: 200);
 
@@ -37,8 +38,7 @@ const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
 
 final otpInputDecoration = InputDecoration(
-  contentPadding:
-      EdgeInsets.symmetric(vertical: proportionateWidth(15)),
+  contentPadding: EdgeInsets.symmetric(vertical: proportionateWidth(15)),
   border: outlineInputBorder(),
   focusedBorder: outlineInputBorder(),
   enabledBorder: outlineInputBorder(),
