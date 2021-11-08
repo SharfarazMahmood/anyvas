@@ -22,7 +22,7 @@ class ProvidersList {
       value: ProductListProvider(),
     ),
     ChangeNotifierProvider.value(
-      value: ProductMdl(),
+      value: Product(),
     )
   ];
 }

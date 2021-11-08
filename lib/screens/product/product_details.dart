@@ -21,10 +21,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int? prodId;
   String prodName = "Product Details";
 
-  ProductMdl? product;
+  Product? product;
 
   Future<void> _refreshProducts(BuildContext context) async {
-    product = Provider.of<ProductMdl>(context, listen: false);
+    product = Provider.of<Product>(context, listen: false);
     await product!.getProductDetails(id: prodId);
     // print('product details page refreshindication');
   }
@@ -50,7 +50,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         prodName = args.title.toString();
         // print('didchangedependencies product_overview_screen prodid $prodId');
       }
-      product = Provider.of<ProductMdl>(
+      product = Provider.of<Product>(
         context,
       );
       product!.getProductDetails(id: prodId).then((value) {

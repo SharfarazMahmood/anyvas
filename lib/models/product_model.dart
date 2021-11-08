@@ -4,7 +4,7 @@ import 'package:anyvas/models/httpRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class ProductMdl with ChangeNotifier {
+class Product with ChangeNotifier {
   String? manufacturerName;
   String? discountName;
   String name = 'not found';
@@ -20,7 +20,7 @@ class ProductMdl with ChangeNotifier {
   ReviewOverviewModel? reviewOverviewModel;
   int id;
 
-  ProductMdl({
+  Product({
     this.name = 'not found',
     this.id = -1,
     this.defaultPictureModel,

@@ -8,11 +8,11 @@ import 'package:http/http.dart' as http;
 import '../models/product_model.dart';
 
 class ProductListProvider with ChangeNotifier {
-  List<ProductMdl> _items = [];
+  List<Product> _items = [];
 
   ProductListProvider();
 
-  List<ProductMdl> get items {
+  List<Product> get items {
     return [..._items];
   }
 
@@ -57,8 +57,8 @@ Future<String> fetchFromApi(int? id) async {
 }
 
 ////////// converting API resopnseData string to a product list
-Future<List<ProductMdl>> createProductObject(String responseData) async {
-  List<ProductMdl> list = [];
+Future<List<Product>> createProductObject(String responseData) async {
+  List<Product> list = [];
   final extractedData = json.decode(responseData) as Map<String, dynamic>;
   final productsData =
       extractedData['Data']['CatalogProductsModel']['Products'] as List;
@@ -72,7 +72,7 @@ Future<List<ProductMdl>> createProductObject(String responseData) async {
       alternateText: dpmData['AlternateText'],
     );
 
-    list.add(ProductMdl(
+    list.add(Product(
       name: productsData[i]['Name'],
       id: productsData[i]['Id'],
       defaultPictureModel: dpm,
