@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 //////// import of config files ////////
 import '../../../configs/size_config.dart';
 import '../../../form_validation/error_dialog.dart';
 import '../../../form_validation/form_validators.dart';
 //////// import of other screens, widgets ////////
-import '../../../models/http_exception.dart';
+import '../../../providers/login_provider.dart';
+import '../../../providers/signup_provider.dart';
+import '../../../screens/signup/sigup_seccess.dart';
+import '../../../models/httpRequest.dart';
 import '../../../widgets/default_button.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -36,17 +40,31 @@ class _SignUpFormState extends State<SignUpForm> {
       _isLoading = true;
     });
     try {
-      // bool loginSuccess = await Provider.of<AuthProvider>(
-      //   context,
-      //   listen: false,
-      // ).login(
-      //   email,
-      //   password,
-      // );
-      // if (loginSuccess) {
-      //   Navigator.of(context).pop();
-      // }
-    } on HttpException catch (error) {
+      bool signupSuccess = await Provider.of<SignupProvider>(
+        context,
+        listen: false,
+      ).signUp(
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phone,
+        password: password,
+        confirmPassword: confirmPassword,
+      );
+      if (signupSuccess) {
+        await Provider.of<LoginProvider>(
+          context,
+          listen: false,
+        ).login(
+          emailOrPhone: email!.length <= 0
+              ? phone //// if email is null, then use phone
+              : email,
+          password: password,
+        );
+        Navigator.of(context)
+            .pushReplacementNamed(SignupSuccessScreen.routeName);
+      }
+    } on HttpRequest catch (error) {
       ErrorDialog.showErrorDialog(context, error.toString());
     } catch (error) {
       print(error);
@@ -68,7 +86,7 @@ class _SignUpFormState extends State<SignUpForm> {
           sized_box,
           lastNameField(),
           sized_box,
-          emailOrPhoneField(),
+          emailField(),
           sized_box,
           phoneNumberField(),
           sized_box,
@@ -94,7 +112,7 @@ class _SignUpFormState extends State<SignUpForm> {
   TextFormField firstNameField() {
     return TextFormField(
       keyboardType: TextInputType.name,
-      onSaved: (value) => email = value,
+      onSaved: (value) => firstName = value,
       validator: (value) => FormValidators.nameValidator(value),
       decoration: InputDecoration(
         labelText: "First name",
@@ -108,7 +126,7 @@ class _SignUpFormState extends State<SignUpForm> {
   TextFormField lastNameField() {
     return TextFormField(
       keyboardType: TextInputType.name,
-      onSaved: (value) => email = value,
+      onSaved: (value) => lastName = value,
       validator: (value) => FormValidators.nameValidator(value),
       decoration: InputDecoration(
         labelText: "Last name",
@@ -119,7 +137,7 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   ////////////email or phone form field
-  TextFormField emailOrPhoneField() {
+  TextFormField emailField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       onSaved: (value) => email = value,
@@ -136,7 +154,7 @@ class _SignUpFormState extends State<SignUpForm> {
   TextFormField phoneNumberField() {
     return TextFormField(
       keyboardType: TextInputType.phone,
-      onSaved: (value) => password = value,
+      onSaved: (value) => phone = value,
       validator: (value) => FormValidators.phoneValidator(value),
       onChanged: (value) {
         setState(() {
@@ -184,8 +202,9 @@ class _SignUpFormState extends State<SignUpForm> {
   TextFormField confirmPasswordField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (value) => password = value,
-      validator: (value) => FormValidators.confirmPasswordValidator(value),
+      onSaved: (value) => confirmPassword = value,
+      validator: (value) => FormValidators.confirmPasswordValidator(
+          value, _passwordController.text),
       decoration: InputDecoration(
         labelText: "Confirm Password",
         // hintText: "Re-enter password",
