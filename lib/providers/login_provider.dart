@@ -20,7 +20,47 @@ class LoginProvider with ChangeNotifier {
     return _userData;
   }
 
-  Future<bool> _authenticate(String? emailOrPhone, String? password) async {
+  Future<bool> login({
+    String? emailOrPhone,
+    String? password,
+  }) async {
+    return _authenticate(
+      emailOrPhone: emailOrPhone,
+      password: password,
+    );
+  }
+
+  Future<bool>? autoLogin() async {
+    bool res = false;
+    var result;
+    String? _savedData = null;
+    await StorageHelper.loadData(key: 'anyvas_user').then((String result) {
+      _savedData = result;
+    });
+    if (_savedData != null &&
+        !_savedData!.contains("no data found in storage.")) {
+      _userData = User.decode(_savedData!);
+      print('IN autoLogin method ');
+      res = true;
+    }
+    if (res) {
+      try {
+        result = _authenticate(
+          emailOrPhone: _userData!.email!.length <= 0
+              ? _userData!.phone
+              : _userData!.email, //// if email is null, then use phone,
+          password: EncryDecry.methods().toDecrypt(_userData!.getCredential),
+        );
+        return result;
+      } on Exception catch (error) {
+        print(error.toString());
+        throw error;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> _authenticate({String? emailOrPhone, String? password}) async {
     // print("IN LOGIN -- $emailOrPhone $password ");
     try {
       var request =
@@ -59,7 +99,8 @@ class LoginProvider with ChangeNotifier {
       } else {
         print("IN LOGIN -- ${response.statusCode} - ${response.reasonPhrase} ");
         var responseData = await response.stream.bytesToString();
-        List<String> errorList = await createHttpErrorList(responseData);
+        List<String> errorList =
+            await HttpRequest.createHttpErrorList(responseData);
         errorList.forEach((errorMessage) {
           log(errorMessage);
           HttpRequest.loginErrorList.forEach((error) {
@@ -77,44 +118,6 @@ class LoginProvider with ChangeNotifier {
       throw error;
     }
     return false;
-  }
-
-  Future<bool>? autoLogin() async {
-    bool res = false;
-    var result;
-    String? _savedData = null;
-    await StorageHelper.loadData(key: 'anyvas_user').then((String result) {
-      _savedData = result;
-    });
-    if (_savedData != null &&
-        !_savedData!.contains("no data found in storage.")) {
-      _userData = User.decode(_savedData!);
-      print(
-          'IN autoLogin method -- ${_userData!.email}  ${_userData!.phone} ${_userData!.getCredential}}');
-      res = true;
-    }
-    if (res) {
-      try {
-        result = _authenticate(
-          _userData!.email!.length <= 0
-              ? _userData!.phone
-              : _userData!.email, //// if email is null, then use phone,
-          EncryDecry.methods().toDecrypt(_userData!.getCredential),
-        );
-        return result;
-      } on Exception catch (error) {
-        print(error.toString());
-        throw error;
-      }
-    }
-    return false;
-  }
-
-  Future<bool> login(String? emailOrPhone, String? password) async {
-    return _authenticate(
-      emailOrPhone,
-      password,
-    );
   }
 
   Future<bool> logout() async {
@@ -148,31 +151,19 @@ class LoginProvider with ChangeNotifier {
     }
     return false;
   }
-}
 
-Future<List<String>> createHttpErrorList(String responseData) async {
-  List<String> errorList = [];
-  final extractedData = json.decode(responseData) as Map<String, dynamic>;
-
-  extractedData['ErrorList'].forEach((element) {
-    errorList.add(element);
-    // print(element);
-  });
-  return errorList;
-}
-
-Future<User> createUserObject(String responseData, String data) async {
-  final extractedData = json.decode(responseData) as Map<String, dynamic>;
-  final userData = User(
-    email: extractedData['Data']['Info']['Email'],
-    phone: extractedData['Data']['Info']['Phone'],
-    username: extractedData['Data']['Info']['Username'],
-    firstName: extractedData['Data']['Info']['FirstName'],
-    lastName: extractedData['Data']['Info']['LastName'],
-    token: extractedData['Data']['Token'],
-    cred: data,
-  );
-  // print("${userData.email}, ${userData.phone} ${userData.username} ");
-
-  return userData;
+  Future<User> createUserObject(String responseData, String data) async {
+    final extractedData = json.decode(responseData) as Map<String, dynamic>;
+    final userData = User(
+      email: extractedData['Data']['Info']['Email'],
+      phone: extractedData['Data']['Info']['Phone'],
+      username: extractedData['Data']['Info']['Username'],
+      firstName: extractedData['Data']['Info']['FirstName'],
+      lastName: extractedData['Data']['Info']['LastName'],
+      token: extractedData['Data']['Token'],
+      cred: data,
+    );
+    // print("${userData.email}, ${userData.phone} ${userData.username} ");
+    return userData;
+  }
 }

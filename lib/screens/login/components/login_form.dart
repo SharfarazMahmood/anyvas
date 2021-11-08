@@ -41,8 +41,10 @@ class _LoginFormState extends State<LoginForm> {
         context,
         listen: false,
       ).login(
-        email,
-        password,
+        emailOrPhone: email!.length <= 0
+            ? phone //// if email is null, then use phone
+            : email,
+        password: password,
       );
       if (loginSuccess) {
         Navigator.of(context).pop();
