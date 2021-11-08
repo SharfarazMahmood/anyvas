@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:anyvas/models/httpRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,54 +26,43 @@ class ProductMdl with ChangeNotifier {
     this.defaultPictureModel,
   });
 
-
-
   Future<void> getProductDetails({int? id, int? updatecartitemid = 0}) async {
-    var headers = {
-      'NST':
-          'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJOU1RfS0VZIjoidGVzdGFwaTEyM3Nha2hhdyJ9.l9txvKvpCrPsW78C9CFfUEVBbZcPpC7kBESRWBUthWjBG6dfP0YgrtoNKoe-PHExT_LGzYXoT1vvxGzWKxDGMA',
-      'Token':
-          'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJOU1RfS0VZIjoidGVzdGFwaTEyM3Nha2hhdyJ9.ca-7lHYgFnU_LXR_Q6_j3pIVb8oAkbn7kDonJn_4SepPhewJ6AHJyLUoITkAsIeOhakoePZ1bjq1rAb3f0GwrQ',
-      'DeviceId': 'DeviceId',
-      'Content-Type': 'application/json',
-    };
-    var request = http.Request(
-        'GET',
-        Uri.parse(
-            'http://incap.bssoln.com/api/productdetails/$id/$updatecartitemid'));
-    request.body = json.encode({
-      "Id": id,
-      "updatecartitemid": updatecartitemid,
-    });
-    request.headers.addAll(headers);
+    try {
+      var request = http.Request(
+          'GET',
+          Uri.parse(
+              'http://incap.bssoln.com/api/productdetails/$id/$updatecartitemid'));
+      request.body = json.encode({
+        "Id": id,
+        "updatecartitemid": updatecartitemid,
+      });
+      request.headers.addAll(HttpRequest.headers);
 
-    http.StreamedResponse response = await request.send();
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      var responseData = await response.stream.bytesToString();
-      // print(responseData);
-      // log(responseData);
+      if (response.statusCode == 200) {
+        var responseData = await response.stream.bytesToString();
 
-      final extractedData = json.decode(responseData) as Map<String, dynamic>;
-      final productData = extractedData['Data'] as Map;
-      name = productData['Name'];
-      // productPrice = productData['ProductPrice']['Price'] ;
+        final extractedData = json.decode(responseData) as Map<String, dynamic>;
+        final productData = extractedData['Data'] as Map;
+        name = productData['Name'];
 
-      // log(name);
-      // log(productData['ProductPrice']['Price']);
-      var dpmData = productData['DefaultPictureModel'];
-      PictureModel dpm = PictureModel(
-        imageUrl: dpmData['ImageUrl'],
-        // thumbImageUrl: dpmData['ThumbImageUrl'],
-        fullSizeImageUrl: dpmData['FullSizeImageUrl'],
-        title: dpmData['Title'],
-        alternateText: dpmData['AlternateText'],
-      );
-      defaultPictureModel = dpm;
-      // log(defaultPictureModel!.imageUrl.toString());
-      notifyListeners();
-    } else {
-      print(response.reasonPhrase);
+        var dpmData = productData['DefaultPictureModel'];
+        PictureModel dpm = PictureModel(
+          imageUrl: dpmData['ImageUrl'],
+          // thumbImageUrl: dpmData['ThumbImageUrl'],
+          fullSizeImageUrl: dpmData['FullSizeImageUrl'],
+          title: dpmData['Title'],
+          alternateText: dpmData['AlternateText'],
+        );
+        defaultPictureModel = dpm;
+        // log(defaultPictureModel!.imageUrl.toString());
+        notifyListeners();
+      } else {
+        print(response.reasonPhrase);
+      }
+    } on Exception catch (e) {
+      print(e.toString());
     }
   }
 }
@@ -127,7 +117,6 @@ class PictureModel {
     this.alternateText,
     this.customProperties,
   });
-
 }
 
 class ProductSpecificationModel {

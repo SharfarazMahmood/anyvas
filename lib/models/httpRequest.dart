@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class HttpRequest implements Exception {
   static Map<String, String> headers = {
     'NST':
@@ -11,8 +13,10 @@ class HttpRequest implements Exception {
     "No customer account found",
     "The credentials provided are incorrect",
   ];
+  static final signupSuccessMessage = "Your registration completed";
   static final signupErrorList = [
     "this email is linked to another account, please enter another number",
+    "this phone number is linked to another account, please enter another number!",
   ];
   final String message;
 
@@ -22,5 +26,15 @@ class HttpRequest implements Exception {
   String toString() {
     return message;
     // return super.toString();
+  }
+
+  static Future<List<String>> createHttpErrorList(String responseData) async {
+    List<String> errorList = [];
+    final extractedData = json.decode(responseData) as Map<String, dynamic>;
+
+    extractedData['ErrorList'].forEach((element) {
+      errorList.add(element);
+    });
+    return errorList;
   }
 }
