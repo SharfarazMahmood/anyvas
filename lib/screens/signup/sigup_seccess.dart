@@ -1,6 +1,5 @@
 import 'package:anyvas/configs/constants.dart';
 import 'package:anyvas/configs/size_config.dart';
-import 'package:anyvas/screens/products_overview_screen.dart';
 import 'package:anyvas/widgets/default_button.dart';
 import 'package:flutter/material.dart';
 

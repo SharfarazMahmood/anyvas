@@ -13,7 +13,7 @@ class EncryDecry {
 
   String toEncrypt(String data) {
     final encrypter = Encrypter(AES(_key));
-    if (data != null) {
+    if (data.isNotEmpty) {
       final encrypted = encrypter.encrypt(data, iv: _iv);
       // print(encrypted.base64);
       return encrypted.base64;
@@ -23,7 +23,7 @@ class EncryDecry {
 
   String toDecrypt(String data) {
     final encrypter = Encrypter(AES(_key));
-    if (data != null) {
+    if (data.isNotEmpty) {
       final decrypted = encrypter.decrypt64(data, iv: _iv);
       // print(decrypted);
       return decrypted;

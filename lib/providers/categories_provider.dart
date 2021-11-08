@@ -27,7 +27,7 @@ class CategoriesProvider with ChangeNotifier {
     }
 
     if (_items.length <= 0) {
-      var result = await fetchFromAPI();
+      await fetchFromAPI();
     }
   }
 
