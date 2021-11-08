@@ -5,8 +5,8 @@ import '../../../configs/size_config.dart';
 import '../../../form_validation/error_dialog.dart';
 import '../../../form_validation/form_validators.dart';
 //////// import of other screens, widgets ////////
-import '../../../models/http_exception.dart';
-import '../../../providers/auth_provider.dart';
+import '../../../models/httpRequest.dart';
+import '../../../providers/login_provider.dart';
 import '../../../widgets/default_button.dart';
 
 class LoginForm extends StatefulWidget {
@@ -37,7 +37,7 @@ class _LoginFormState extends State<LoginForm> {
       _isLoading = true;
     });
     try {
-      bool loginSuccess = await Provider.of<AuthProvider>(
+      bool loginSuccess = await Provider.of<LoginProvider>(
         context,
         listen: false,
       ).login(
@@ -47,7 +47,7 @@ class _LoginFormState extends State<LoginForm> {
       if (loginSuccess) {
         Navigator.of(context).pop();
       }
-    } on HttpException catch (error) {
+    } on HttpRequest catch (error) {
       ErrorDialog.showErrorDialog(context, error.toString());
     } catch (error) {
       print(error);

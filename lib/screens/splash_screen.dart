@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 //////////// import of config files ////////////
 import '../configs/size_config.dart';
 //////////// import of screens, widgets ////////////
-import '../providers/auth_provider.dart';
+import '../providers/login_provider.dart';
 import '../screens/products_overview_screen.dart';
 
 class Splash extends StatefulWidget {
@@ -35,7 +35,7 @@ class _SplashState extends State<Splash> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    var auth = Provider.of<AuthProvider>(context, listen: false);
+    var auth = Provider.of<LoginProvider>(context, listen: false);
     auth.autoLogin();
     if (auth.loggedIn) {
     } else if (!auth.loggedIn) {}

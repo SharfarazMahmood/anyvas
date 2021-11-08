@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'package:anyvas/models/httpRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 //////// import of config files ////////
-import '../helpers/http_helper.dart';
 import '../helpers/storage_helper.dart';
 import '../models/category.dart';
 
@@ -35,7 +35,7 @@ class CategoriesProvider with ChangeNotifier {
     try {
       var request = http.Request(
           'GET', Uri.parse('http://incap.bssoln.com/api/categories'));
-      request.headers.addAll(HttpHelper.headers);
+      request.headers.addAll(HttpRequest.headers);
 
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:anyvas/models/httpRequest.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 //////// import of config files ////////
-import '../helpers/http_helper.dart';
 import '../models/product_model.dart';
 
 class ProductListProvider with ChangeNotifier {
@@ -41,7 +41,7 @@ Future<String> fetchFromApi(int? id) async {
       Uri.parse('http://incap.bssoln.com/api/category/$id'),
     );
     request.body = json.encode({"Id": id});
-    request.headers.addAll(HttpHelper.headers);
+    request.headers.addAll(HttpRequest.headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var responseData = await response.stream.bytesToString();

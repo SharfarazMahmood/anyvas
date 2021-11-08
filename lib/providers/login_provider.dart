@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 //////// import of config files ////////
 import '../helpers/encryption.dart';
-import '../helpers/http_helper.dart';
 import '../helpers/storage_helper.dart';
 import '../models/user.dart';
-import '../models/http_exception.dart';
+import '../models/httpRequest.dart';
 
-class AuthProvider with ChangeNotifier {
+class LoginProvider with ChangeNotifier {
   bool _loggedIn = false;
   User? _userData;
 
@@ -26,7 +25,7 @@ class AuthProvider with ChangeNotifier {
       var request =
           http.Request('POST', Uri.parse('http://incap.bssoln.com/api/login'));
       request.body = json.encode({"username": email, "password": password});
-      request.headers.addAll(HttpHelper.headers);
+      request.headers.addAll(HttpRequest.headers);
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
@@ -56,13 +55,13 @@ class AuthProvider with ChangeNotifier {
         List<String> errorList = await createHttpErrorList(responseData);
         errorList.forEach((errorMessage) {
           log(errorMessage);
-          HttpException.errorList.forEach((error) {
+          HttpRequest.loginErrorList.forEach((error) {
             if (errorMessage.contains(error)) {
-              throw HttpException(error);
+              throw HttpRequest(error);
             }
           });
           if (response.statusCode == 400) {
-            throw HttpException(response.reasonPhrase.toString());
+            throw HttpRequest(response.reasonPhrase.toString());
           }
         });
       }
@@ -107,7 +106,7 @@ class AuthProvider with ChangeNotifier {
     var request =
         http.Request('GET', Uri.parse('http://incap.bssoln.com/api/logout'));
     request.body = '''''';
-    request.headers.addAll(HttpHelper.headers);
+    request.headers.addAll(HttpRequest.headers);
 
     http.StreamedResponse response = await request.send();
 

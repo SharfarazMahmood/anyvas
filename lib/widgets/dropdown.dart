@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../configs/enums.dart';
 import '../configs/constants.dart';
 //////// import of other screens, widgets ////////
-import '../providers/auth_provider.dart';
+import '../providers/login_provider.dart';
 import '../screens/signup/signup_screen.dart';
 import '../screens/login/login_screen.dart';
 
@@ -18,7 +18,7 @@ class DropDownMenu extends StatefulWidget {
 class _DropDownMenuState extends State<DropDownMenu> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
+    return Consumer<LoginProvider>(
         builder: (BuildContext context, user, Widget? _) {
       return PopupMenuButton(
         onSelected: (AuthenticationType selectedValue) {

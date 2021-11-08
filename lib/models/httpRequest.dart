@@ -1,4 +1,4 @@
-class HttpHelper {
+class HttpRequest implements Exception {
   static Map<String, String> headers = {
     'NST':
         'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJOU1RfS0VZIjoidGVzdGFwaTEyM3Nha2hhdyJ9.l9txvKvpCrPsW78C9CFfUEVBbZcPpC7kBESRWBUthWjBG6dfP0YgrtoNKoe-PHExT_LGzYXoT1vvxGzWKxDGMA',
@@ -7,4 +7,20 @@ class HttpHelper {
     'DeviceId': 'DeviceId',
     'Content-Type': 'application/json',
   };
+  static final loginErrorList = [
+    "No customer account found",
+    "The credentials provided are incorrect",
+  ];
+  static final signupErrorList = [
+    "this email is linked to another account, please enter another number",
+  ];
+  final String message;
+
+  HttpRequest(this.message);
+
+  @override
+  String toString() {
+    return message;
+    // return super.toString();
+  }
 }
