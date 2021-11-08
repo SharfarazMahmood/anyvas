@@ -20,11 +20,13 @@ class LoginProvider with ChangeNotifier {
     return _userData;
   }
 
-  Future<bool> _authenticate(String? email, String? password) async {
+  Future<bool> _authenticate(String? emailOrPhone, String? password) async {
+    // print("IN LOGIN -- $emailOrPhone $password ");
     try {
       var request =
           http.Request('POST', Uri.parse('http://incap.bssoln.com/api/login'));
-      request.body = json.encode({"username": email, "password": password});
+      request.body =
+          json.encode({"username": emailOrPhone, "password": password});
       request.headers.addAll(HttpRequest.headers);
       http.StreamedResponse response = await request.send();
 
@@ -39,18 +41,23 @@ class LoginProvider with ChangeNotifier {
         toBeSaved = User.encode(_userData);
         try {
           await StorageHelper.saveData(key: "anyvas_user", data: toBeSaved);
-        } on Exception catch (e) {
-          print(e);
+        } on Exception catch (error) {
+          print(error);
+          throw error;
         }
 
-        print("${_userData!.username} ${_userData!.token.toString()}");
+        // print(
+        //   "${_userData!.firstName} \n${_userData!.lastName} \n${_userData!.username}" +
+        //       "\n${_userData!.email} ${_userData!.phone} ${_userData!.getCredential}" +
+        //       "\n${_userData!.token.toString()}",
+        // );
         _loggedIn = true;
         notifyListeners();
-        print('LOGGED IN ');
+        // print('LOGGED IN ');
         return true;
         // log(responseData);
       } else {
-        print(" ${response.statusCode} - ${response.reasonPhrase} ");
+        print("IN LOGIN -- ${response.statusCode} - ${response.reasonPhrase} ");
         var responseData = await response.stream.bytesToString();
         List<String> errorList = await createHttpErrorList(responseData);
         errorList.forEach((errorMessage) {
@@ -66,7 +73,7 @@ class LoginProvider with ChangeNotifier {
         });
       }
     } catch (error) {
-      // print(error);
+      print(error);
       throw error;
     }
     return false;
@@ -82,50 +89,63 @@ class LoginProvider with ChangeNotifier {
     if (_savedData != null &&
         !_savedData!.contains("no data found in storage.")) {
       _userData = User.decode(_savedData!);
-      print('${_userData!.firstName}  ${_userData!.lastName}');
+      print(
+          'IN autoLogin method -- ${_userData!.email}  ${_userData!.phone} ${_userData!.getCredential}}');
       res = true;
     }
     if (res) {
-      result = _authenticate(
-        _userData!.email,
-        EncryDecry.methods().toDecrypt(_userData!.getCredential),
-      );
-      return result;
+      try {
+        result = _authenticate(
+          _userData!.email!.length <= 0
+              ? _userData!.phone
+              : _userData!.email, //// if email is null, then use phone,
+          EncryDecry.methods().toDecrypt(_userData!.getCredential),
+        );
+        return result;
+      } on Exception catch (error) {
+        print(error.toString());
+        throw error;
+      }
     }
     return false;
   }
 
-  Future<bool> login(String? email, String? password) async {
+  Future<bool> login(String? emailOrPhone, String? password) async {
     return _authenticate(
-      email,
+      emailOrPhone,
       password,
     );
   }
 
   Future<bool> logout() async {
-    var request =
-        http.Request('GET', Uri.parse('http://incap.bssoln.com/api/logout'));
-    request.body = '''''';
-    request.headers.addAll(HttpRequest.headers);
+    try {
+      var request =
+          http.Request('GET', Uri.parse('http://incap.bssoln.com/api/logout'));
+      request.body = '''''';
+      request.headers.addAll(HttpRequest.headers);
 
-    http.StreamedResponse response = await request.send();
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-      print("after logging out");
-      var userDataDeleted = await StorageHelper.removeData(key: 'anyvas_user');
-      if (userDataDeleted) {
-        _loggedIn = false;
-        _userData = null;
-        notifyListeners();
-        return userDataDeleted;
+      if (response.statusCode == 200) {
+        print(await response.stream.bytesToString());
+        print("after logging out");
+        var userDataDeleted =
+            await StorageHelper.removeData(key: 'anyvas_user');
+        if (userDataDeleted) {
+          _loggedIn = false;
+          _userData = null;
+          notifyListeners();
+          return userDataDeleted;
+        }
+      } else {
+        print(response.reasonPhrase);
+        print("after logging error ");
       }
-    } else {
-      print(response.reasonPhrase);
-      print("after logging error ");
+      print(" logging out failed");
+      notifyListeners();
+    } on Exception catch (error) {
+      throw error;
     }
-    print(" logging out failed");
-    notifyListeners();
     return false;
   }
 }
