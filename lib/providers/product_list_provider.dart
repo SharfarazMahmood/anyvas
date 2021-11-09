@@ -27,6 +27,15 @@ class ProductListProvider with ChangeNotifier {
         print('could not reach server !! Please try again later.');
       } else {
         _items = await createProductObject(responseData);
+        // _items.forEach((item) {
+          // print(item.reviewOverviewModel!.ratingSum);
+          // print(item.reviewOverviewModel!.totalReviews);
+          //   print(item.productPrice!.oldPrice);
+          //   print(item.productPrice!.price);
+          //   print(item.productPrice!.priceValue);
+          // print(item.ratting);
+          // print('------------------------------');
+        // });
         notifyListeners();
       }
     }
@@ -38,7 +47,7 @@ Future<String> fetchFromApi(int? id) async {
   try {
     var request = http.Request(
       'GET',
-      Uri.parse('http://incap.bssoln.com/api/category/$id'),
+      Uri.parse('${HttpRequest.serverUrl}/category/$id'),
     );
     request.body = json.encode({"Id": id});
     request.headers.addAll(HttpRequest.headers);
@@ -71,11 +80,26 @@ Future<List<Product>> createProductObject(String responseData) async {
       title: dpmData['Title'],
       alternateText: dpmData['AlternateText'],
     );
+    var productPriceData = productsData[i]['ProductPrice'];
+    ProductPrice priceData = ProductPrice(
+      oldPrice: productPriceData['OldPrice'] ?? "",
+      price: productPriceData['Price'],
+      priceValue: productPriceData['PriceValue'],
+    );
+    var reviewData = productsData[i]['ReviewOverviewModel'];
+    ReviewOverviewModel rom = ReviewOverviewModel(
+      ratingSum: reviewData['RatingSum'],
+      totalReviews: reviewData['TotalReviews'],
+    );
 
     list.add(Product(
       name: productsData[i]['Name'],
+      discountName: productsData[i]['DiscountName'],
       id: productsData[i]['Id'],
+      manufacturerName: productsData[i]['ManufacturerName'],
       defaultPictureModel: dpm,
+      productPrice: priceData,
+      reviewOverviewModel: rom,
     ));
   }
   return list;

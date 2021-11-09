@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
-  String? manufacturerName;
-  String? discountName;
-  String name = 'not found';
-  String? shortDescription;
-  String? fullDescription;
+  String manufacturerName;
+  String discountName;
+  String name;
+  String shortDescription;
+  String fullDescription;
   String? sku;
   int? productType;
   bool? markAsNew;
@@ -20,10 +20,28 @@ class Product with ChangeNotifier {
   ReviewOverviewModel? reviewOverviewModel;
   int id;
 
+  String get ratting {
+    if (reviewOverviewModel != null) {
+      double rating =
+          (reviewOverviewModel!.ratingSum / reviewOverviewModel!.totalReviews);
+      // print(rating);
+      if (rating > 0) {
+        return (rating).toStringAsFixed(1);
+      }
+    }
+    return "NaN";
+  }
+
   Product({
     this.name = 'not found',
+    this.discountName = "not found",
+    this.manufacturerName = "not found",
+    this.shortDescription = "not found",
+    this.fullDescription = "not found",
+    this.productPrice,
     this.id = -1,
     this.defaultPictureModel,
+    this.reviewOverviewModel,
   });
 
   Future<void> getProductDetails({int? id, int? updatecartitemid = 0}) async {
@@ -31,7 +49,7 @@ class Product with ChangeNotifier {
       var request = http.Request(
           'GET',
           Uri.parse(
-              'http://incap.bssoln.com/api/productdetails/$id/$updatecartitemid'));
+              '${HttpRequest.serverUrl}/productdetails/$id/$updatecartitemid'));
       request.body = json.encode({
         "Id": id,
         "updatecartitemid": updatecartitemid,
@@ -69,35 +87,36 @@ class Product with ChangeNotifier {
 
 class ProductPrice {
   String currencyCode = "Tk";
-  String? OldPrice;
-  String? Price;
-  String? priceWithDiscount;
-  int? PriceValue;
-  String? BasePricePAngV;
-  bool? DisableBuyButton;
-  bool? DisableWishlistButton;
-  bool? DisableAddToCompareListButton;
-  bool? AvailableForPreOrder;
-  String? PreOrderAvailabilityStartDateTimeUtc;
-  bool? IsRental;
-  bool? ForceRedirectionAfterAddingToCart;
-  bool? DisplayTaxShippingInfo;
-  Map? CustomProperties;
+  String oldPrice = "not found";
+  String price = "not found";
+  String priceWithDiscount = "not found";
+  double priceValue;
+  String? basePricePAngV;
+  bool? disableBuyButton;
+  bool? disableWishlistButton;
+  bool? disableAddToCompareListButton;
+  bool? availableForPreOrder;
+  String? preOrderAvailabilityStartDateTimeUtc;
+  bool? isRental;
+  bool? forceRedirectionAfterAddingToCart;
+  bool? displayTaxShippingInfo;
+  Map? customProperties;
 
   ProductPrice({
-    this.OldPrice,
-    this.Price,
-    this.PriceValue,
-    this.BasePricePAngV,
-    this.DisableBuyButton,
-    this.DisableWishlistButton,
-    this.DisableAddToCompareListButton,
-    this.AvailableForPreOrder,
-    this.PreOrderAvailabilityStartDateTimeUtc,
-    this.IsRental,
-    this.ForceRedirectionAfterAddingToCart,
-    this.DisplayTaxShippingInfo,
-    this.CustomProperties,
+    this.oldPrice = "not found",
+    this.price = "not found",
+    this.priceValue = 0.00,
+    this.priceWithDiscount = "not found",
+    this.basePricePAngV = "not found",
+    this.disableBuyButton,
+    this.disableWishlistButton,
+    this.disableAddToCompareListButton,
+    this.availableForPreOrder,
+    this.preOrderAvailabilityStartDateTimeUtc,
+    this.isRental,
+    this.forceRedirectionAfterAddingToCart,
+    this.displayTaxShippingInfo,
+    this.customProperties,
   });
 }
 
@@ -130,9 +149,14 @@ class ProductSpecificationModel {
 
 class ReviewOverviewModel {
   int? productId;
-  int? ratingSum;
-  int? totaReviews;
+  int ratingSum;
+  int totalReviews;
   bool? allowCustomerReviews;
   bool? canAddNewReview;
   Map? customProperties;
+
+  ReviewOverviewModel({
+    this.ratingSum = -1,
+    this.totalReviews = 1,
+  });
 }
