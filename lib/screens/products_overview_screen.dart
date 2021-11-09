@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //////// import of config files ////////
@@ -72,9 +73,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       drawer: AppDrawer(),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(
-                color: kSecondaryColor,
-              ),
+            child: progressIndicator,
             )
           : RefreshIndicator(
               color: kSecondaryColor,

@@ -1,3 +1,4 @@
+import 'package:anyvas/configs/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,16 +18,13 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   var _isLoading = false;
   var _isInit = true;
-
   int? prodId;
   String prodName = "Product Details";
-
   Product? product;
 
   Future<void> _refreshProducts(BuildContext context) async {
     product = Provider.of<Product>(context, listen: false);
     await product!.getProductDetails(id: prodId);
-    // print('product details page refreshindication');
   }
 
   @override
@@ -48,17 +46,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ModalRoute.of(context)!.settings.arguments as ScreenArguments;
         prodId = args.id;
         prodName = args.title.toString();
-        // print('didchangedependencies product_overview_screen prodid $prodId');
       }
-      product = Provider.of<Product>(
-        context,
-      );
+      product = Provider.of<Product>(context);
       product!.getProductDetails(id: prodId).then((value) {
         setState(() {
           _isLoading = false;
         });
       });
-      // print('didchangedependencies');
       _isInit = false;
     }
     super.didChangeDependencies();
@@ -69,9 +63,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return Scaffold(
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xffe99800),
-              ),
+              child: progressIndicator,
             )
           : RefreshIndicator(
               color: const Color(0xffe99800),
@@ -88,18 +80,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           backgroundColor: Colors.black54,
                         ),
                       ),
-                      background: Hero(
-                        tag: product!.id,
-                        child: CachedNetworkImage(
-                          imageUrl: product!.defaultPictureModel!.imageUrl,
-                          placeholder: (context, url) =>
-                              const Center(child: Text("Loading...")),
-                          fit: BoxFit.contain,
-                        ),
-                        // child: Image.network(
-                        //   product!.defaultPictureModel!.imageUrl,
-                        //   fit: BoxFit.cover,
-                        // ),
+                      background: CachedNetworkImage(
+                        imageUrl: product!.defaultPictureModel!.imageUrl,
+                        placeholder: (context, url) =>
+                            const Center(child: Text("Loading...")),
+                        fit: BoxFit.contain,
                       ),
                     ),
                   )
