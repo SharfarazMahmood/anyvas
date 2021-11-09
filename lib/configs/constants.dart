@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'size_config.dart';
 
@@ -25,11 +26,13 @@ final headingStyle = TextStyle(
 );
 
 const defaultDuration = Duration(milliseconds: 300);
+const progressIndicator = CupertinoActivityIndicator(
+  radius: 20,
+);
 
 // Form Regex
-final RegExp emailRegExp =
-    RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z.]+");
-final RegExp phoneNumberRegExp = RegExp(r"^(088|\+88){0,1}0[0-9]{10}" );
+final RegExp emailRegExp = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z.]+");
+final RegExp phoneNumberRegExp = RegExp(r"^(088|\+88){0,1}0[0-9]{10}");
 
 final otpInputDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: proportionateWidth(15)),
