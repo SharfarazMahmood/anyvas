@@ -40,7 +40,7 @@ class SignupProvider with ChangeNotifier {
   }) async {
     try {
       var request = http.Request(
-          'POST', Uri.parse('http://incap.bssoln.com/api/register'));
+          'POST', Uri.parse('${HttpRequest.serverUrl}/register'));
       request.body = json.encode({
         "firstName": firstName,
         "lastName": lastName,

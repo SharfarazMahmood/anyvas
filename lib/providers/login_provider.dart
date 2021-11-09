@@ -64,7 +64,7 @@ class LoginProvider with ChangeNotifier {
     // print("IN LOGIN -- $emailOrPhone $password ");
     try {
       var request =
-          http.Request('POST', Uri.parse('http://incap.bssoln.com/api/login'));
+          http.Request('POST', Uri.parse('${HttpRequest.serverUrl}/login'));
       request.body =
           json.encode({"username": emailOrPhone, "password": password});
       request.headers.addAll(HttpRequest.headers);
@@ -123,7 +123,7 @@ class LoginProvider with ChangeNotifier {
   Future<bool> logout() async {
     try {
       var request =
-          http.Request('GET', Uri.parse('http://incap.bssoln.com/api/logout'));
+          http.Request('GET', Uri.parse('${HttpRequest.serverUrl}/logout'));
       request.body = '''''';
       request.headers.addAll(HttpRequest.headers);
 

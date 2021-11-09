@@ -34,7 +34,7 @@ class CategoriesProvider with ChangeNotifier {
   Future<bool> fetchFromAPI() async {
     try {
       var request = http.Request(
-          'GET', Uri.parse('http://incap.bssoln.com/api/categories'));
+          'GET', Uri.parse('${HttpRequest.serverUrl}/categories'));
       request.headers.addAll(HttpRequest.headers);
 
       http.StreamedResponse response = await request.send();
