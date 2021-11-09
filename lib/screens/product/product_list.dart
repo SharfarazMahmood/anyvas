@@ -15,9 +15,13 @@ class ProductList extends StatelessWidget {
     final productsData =
         Provider.of<ProductListProvider>(context, listen: false);
 
-    // print('product list widget');
-
     final products = productsData.items;
+    List<Widget> gridItemList = products
+        .map((item) => ChangeNotifierProvider.value(
+              value: item,
+              child: ProductItem(),
+            ))
+        .toList();
 
     return products.isEmpty
         ? ListView(
@@ -33,19 +37,13 @@ class ProductList extends StatelessWidget {
               ),
             ],
           )
-        : GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: products.length,
-            itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-              value: products[index],
-              child: ProductItem(),
-            ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 4 / 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 5,
-            ),
+        : GridView.extent(
+            childAspectRatio: 9/16,
+            maxCrossAxisExtent: 300,
+            padding: const EdgeInsets.all(4),
+            mainAxisSpacing: 1,
+            crossAxisSpacing: 1,
+            children: gridItemList,
           );
   }
 }

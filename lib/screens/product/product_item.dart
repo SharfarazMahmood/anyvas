@@ -1,3 +1,5 @@
+import 'package:anyvas/configs/constants.dart';
+import 'package:anyvas/configs/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,9 +14,8 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<ProductMdl>(context, listen: false);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
+    final product = Provider.of<Product>(context, listen: false);
+    return Card(
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamed(
@@ -25,57 +26,76 @@ class ProductItem extends StatelessWidget {
             ),
           );
         },
-        child: GridTile(
-          child: Hero(
-            tag: product.id,
-            child: CachedNetworkImage(
-              imageUrl: product.defaultPictureModel!.imageUrl,
-              placeholder: (context, url) =>
-                  const Center(child: Text("Loading...")),
-              fit: BoxFit.cover,
-            ),
-            ////////////// using Image.network, always gets image from network //////////////
-            // child: Image.network(
-            //   product.defaultPictureModel!.imageUrl,
-            //   loadingBuilder: (_, child, loadingProgress) {
-            //     if (loadingProgress == null) {
-            //       return child;
-            //     }
-            //     return const Center(child: Text("Loading..."));
-            //   },
-            // ),
-            ////////////// using NewtworkImage, always gets image from network //////////////
-            // child: FadeInImage(
-            //   placeholder:
-            //       const AssetImage('assets/images/product-placeholder.png'),
-            //   image: NetworkImage(product.defaultPictureModel!.imageUrl),
-            //   fit: BoxFit.cover,
-            // ),
-          ),
-          footer: GridTileBar(
-            backgroundColor: Colors.black54,
-            // leading: Consumer<ProductMdl>(
-            //   builder: (ctx, product, _) => IconButton(
-            //     onPressed: () {
-            //       // product.toggleFavoriteStatus(
-            //       //   authData.token,
-            //       //   authData.userId,
-            //       // );
-            //     },
-            //     icon: Icon(productisFavorite
-            //         ? Icons.favorite
-            //         : Icons.favorite_border),
-            //     color: Theme.of(context).accentColor,
-            //   ),
-            // ),
-            title: Text(
-              product.name,
-              textAlign: TextAlign.center,
-            ),
-            trailing: const AddToCartButton(
-                // cart: cart,
-                // loadedProduct: product,
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Center(
+                  child: CachedNetworkImage(
+                    imageUrl: product.defaultPictureModel!.imageUrl,
+                    placeholder: (context, url) => progressIndicator,
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
+              ),
+              SizedBox(height: proportionateHeight(10)),
+              Text(
+                product.manufacturerName,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: proportionateHeight(5)),
+              Text(
+                product.name,
+                softWrap: true,
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: proportionateHeight(5)),
+              Row(
+                children: [
+                  Text(
+                    product.productPrice!.price,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(width: proportionateWidth(5)),
+                  Text(
+                    product.productPrice!.oldPrice,
+                    style: TextStyle(
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: proportionateHeight(10)),
+              product.ratting == "NaN"
+                  ? Text("  ")
+                  : Container(
+                      padding: const EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1.5,
+                          color: kSecondaryColor,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(6),
+                        ),
+                      ),
+                      child: Text("${product.ratting}"),
+                    ),
+            ],
           ),
         ),
       ),
