@@ -1,11 +1,10 @@
 import 'package:anyvas/configs/constants.dart';
-import 'package:anyvas/configs/size_config.dart';
 import 'package:anyvas/models/category.dart';
+import 'package:anyvas/screens/home/main_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //////// import of other screens, widgets ////////
 import '../../models/screen_arguments.dart';
-import '../../screens/products_overview_screen.dart';
 import '../../providers/categories_provider.dart';
 
 class CategoriesList extends StatefulWidget {
@@ -36,7 +35,7 @@ class _CategoriesListState extends State<CategoriesList> {
                   AnimatedContainer(
                     duration: Duration(milliseconds: 300),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      padding: const EdgeInsets.only(left: 0.0),
                       child: Card(
                         elevation: 4,
                         child: Column(
@@ -49,10 +48,11 @@ class _CategoriesListState extends State<CategoriesList> {
                                     onPressed: () {
                                       Navigator.of(context)
                                           .pushReplacementNamed(
-                                        ProductsOverviewScreen.routeName,
+                                        MainView.routeName,
                                         arguments: ScreenArguments(
                                           id: subCat.id,
                                           title: subCat.name,
+                                          categorySelected: true,
                                         ),
                                       );
                                     },
@@ -84,8 +84,11 @@ class _CategoriesListState extends State<CategoriesList> {
                             ),
                             if (subCat.haveSubCategories == true &&
                                 subCat.isExpanded)
-                              createCategoryList(
-                                  subCat.subCategories, context)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: createCategoryList(
+                                    subCat.subCategories, context),
+                              )
                           ],
                         ),
                       ),
@@ -95,5 +98,4 @@ class _CategoriesListState extends State<CategoriesList> {
             ),
           );
   }
-
 }

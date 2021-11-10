@@ -6,23 +6,28 @@ import '../configs/constants.dart';
 //////// import of other screens, widgets ////////
 import '../models/screen_arguments.dart';
 import '../providers/product_list_provider.dart';
-import '../widgets/dropdown.dart';
-import '../widgets/app_drawer.dart';
 import '../screens/product/product_list.dart';
 
 class ProductsOverviewScreen extends StatefulWidget {
   static String routeName = '/productOverview';
+  int catId = 1;
+  String catName = "  ";
+
+  ProductsOverviewScreen({this.catId = 1, this.catName = "  "});
 
   @override
-  State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
+  State<ProductsOverviewScreen> createState() =>
+      _ProductsOverviewScreenState(catId: catId, catName: catName);
 }
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _isLoading = false;
   var _isInit = true;
 
-  int? catId;
-  String catName = "Anyvas";
+  int catId;
+  String catName = "  ";
+
+  _ProductsOverviewScreenState({this.catId = 1, this.catName = "  "});
 
   Future<void> _refreshProducts(BuildContext context) async {
     await Provider.of<ProductListProvider>(context, listen: false)
@@ -46,7 +51,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       } else {
         var args =
             ModalRoute.of(context)!.settings.arguments as ScreenArguments;
-        catId = args.id;
+        catId = args.id!;
         catName = args.title.toString();
       }
       var productsList = Provider.of<ProductListProvider>(
@@ -66,14 +71,18 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(catName),
-        actions: <Widget>[DropDownMenu()],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(30),
+        child: AppBar(
+          title: Text("Category: $catName"),
+          titleTextStyle: TextStyle(fontSize: 14, color: kSecondaryColor2),
+          automaticallyImplyLeading: false,
+        ),
       ),
-      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
       body: _isLoading
           ? const Center(
-            child: progressIndicator,
+              child: progressIndicator,
             )
           : RefreshIndicator(
               color: kSecondaryColor,

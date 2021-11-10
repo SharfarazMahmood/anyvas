@@ -1,10 +1,10 @@
+import 'package:anyvas/screens/home/main_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //////////// import of config files ////////////
 import '../configs/size_config.dart';
 //////////// import of screens, widgets ////////////
 import '../providers/login_provider.dart';
-import '../screens/products_overview_screen.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -19,7 +19,8 @@ class _SplashState extends State<Splash> {
     await Future.delayed(const Duration(milliseconds: 2000), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ProductsOverviewScreen()),
+        // MaterialPageRoute(builder: (context) => ProductsOverviewScreen()),
+        MaterialPageRoute(builder: (context) => MainView()),
       );
     });
   }
@@ -52,12 +53,12 @@ class _SplashState extends State<Splash> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               // SizedBox(
-                // child: 
-                Image(
-                  height: proportionateHeight(80),
-                  width: proportionateWidth(80),
-                  image: AssetImage('assets/images/logo/anyvas-icon-Logo.png'),
-                ),
+              // child:
+              Image(
+                height: proportionateHeight(80),
+                width: proportionateWidth(80),
+                image: AssetImage('assets/images/logo/anyvas-icon-Logo.png'),
+              ),
               // ),
               Text(
                 "Anyvas",
