@@ -1,52 +1,40 @@
-//   {
-//     "Name": "Candles",
-//     "SeName": "candles",
-//     "NumberOfProducts": null,
-//     "IncludeInTopMenu": true,
-//     "SubCategories": [],
-//     "HaveSubCategories": false,
-//     "Route": null,
-//     "IconUrl": null,
-//     "Id": 100
-// }
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 class Category with ChangeNotifier {
-  String? Name = '';
-  String? SeName = '';
-  int? NumberOfProducts = null;
-  bool? IncludeInTopMenu = null;
-  List<Category>? SubCategories = [];
-  bool? HaveSubCategories = false;
-  String? Route = null;
-  String? IconUrl = null;
-  int? Id = null;
+  String? name = '';
+  String? seName = '';
+  int? numberOfProducts = null;
+  bool? includeInTopMenu = null;
+  List<Category>? subCategories = [];
+  bool? haveSubCategories = false;
+  String? route = null;
+  String? iconUrl = null;
+  int? id = null;
+  bool isExpanded = false;
 
   Category({
-    this.Name,
-    this.SeName,
-    this.NumberOfProducts,
-    this.IncludeInTopMenu,
-    this.SubCategories,
-    this.HaveSubCategories,
-    this.Route,
-    this.IconUrl,
-    this.Id,
+    this.name,
+    this.seName,
+    this.numberOfProducts,
+    this.includeInTopMenu,
+    this.subCategories,
+    this.haveSubCategories,
+    this.route,
+    this.iconUrl,
+    this.id,
   });
 
   factory Category.fromJson(Map<String, dynamic> jsonData) {
     return Category(
-      Id: jsonData['id'],
-      Name: jsonData['name'],
+      id: jsonData['id'],
+      name: jsonData['name'],
     );
   }
 
   static Map<String, dynamic> toMap(Category category) => {
-        'id': category.Id,
-        'name': category.Name,
+        'id': category.id,
+        'name': category.name,
       };
 
   static String encode(List<Category> categories) => json.encode(
