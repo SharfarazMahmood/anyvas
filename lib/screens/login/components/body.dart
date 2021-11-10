@@ -16,8 +16,7 @@ class Body extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: proportionateWidth(20)),
+          padding: EdgeInsets.symmetric(horizontal: proportionateWidth(20)),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -25,6 +24,11 @@ class Body extends StatelessWidget {
                 Text("Welcome", style: headingStyle),
                 Text(
                   "Login with email/phone & password \nor Continue with social account",
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontSize: proportionateWidth(15),
+                  ),
+                  softWrap: true,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: SizeConfig.screenHeight * 0.04),
