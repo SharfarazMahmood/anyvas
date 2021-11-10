@@ -48,6 +48,12 @@ class _AppDrawerState extends State<AppDrawer> {
         appBar: AppBar(
           title: const Text('Categories'),
           automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              onPressed: () => _refreshPage(context),
+              icon: Icon(Icons.refresh),
+            )
+          ],
         ),
         body: Container(
           // color: const Color(0xff001a41),
@@ -62,11 +68,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 )
               : Consumer<CategoriesProvider>(
-                  builder: (ctx, categories, _) => RefreshIndicator(
-                    color: kSecondaryColor,
-                    onRefresh: () => _refreshPage(context),
-                    child: CategoriesList(),
-                  ),
+                  builder: (ctx, categories, _) => CategoriesList(),
                 ),
         ),
       ),

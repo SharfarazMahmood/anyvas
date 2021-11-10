@@ -22,7 +22,11 @@ class CategoriesProvider with ChangeNotifier {
     });
     if (_savedData != null &&
         !_savedData!.contains("no data found in storage.")) {
-      _items = Category.decode(_savedData!);
+      final extractedData = json.decode(_savedData!) as Map<String, dynamic>;
+      final categoriesData = extractedData['Data']['Categories'] as List;
+      _items = createCategoryObject(categoriesData);
+      // _items = Category.decode(_savedData!);
+      print("--------------From shared preferences------------");
       notifyListeners();
     }
 
@@ -32,9 +36,10 @@ class CategoriesProvider with ChangeNotifier {
   }
 
   Future<bool> fetchFromAPI() async {
+    print("--------------From API------------");
     try {
-      var request = http.Request(
-          'GET', Uri.parse('${HttpRequest.serverUrl}/categories'));
+      var request =
+          http.Request('GET', Uri.parse('${HttpRequest.serverUrl}/categories'));
       request.headers.addAll(HttpRequest.headers);
 
       http.StreamedResponse response = await request.send();
@@ -46,7 +51,7 @@ class CategoriesProvider with ChangeNotifier {
         _items = createCategoryObject(categoriesData);
         notifyListeners();
 
-        String toBeSaved = Category.encode(_items);
+        String toBeSaved = responseData;
         try {
           await StorageHelper.saveData(key: "categoryList", data: toBeSaved);
         } on Exception catch (e) {
@@ -63,19 +68,26 @@ class CategoriesProvider with ChangeNotifier {
     return false;
   }
 
+  int level = 1;
   List<Category> createCategoryObject(List<dynamic> categoriesData) {
     List<Category> list = [];
     for (var i = 0; i < categoriesData.length; i++) {
+      // print("${categoriesData[i]['Name']}   has sub cat: ${categoriesData[i]['HaveSubCategories'].toString()}");
+      List<Category> subCats = [];
+      if (categoriesData[i]['HaveSubCategories']) {
+        // level++;
+        // print('Level ----  $level');
+        subCats =
+            createCategoryObject(categoriesData[i]['SubCategories'] as List);
+        // print('Level ----  $level');
+        // level--;
+      }
       list.add(Category(
-        Name: categoriesData[i]['Name'],
-        SeName: categoriesData[i]['SeName'],
-        NumberOfProducts: categoriesData[i]['NumberOfProducts'],
-        IncludeInTopMenu: categoriesData[i]['IncludeInTopMenu'],
-        // SubCategories: categoriesData[i]['SubCategories'],
-        HaveSubCategories: categoriesData[i]['HaveSubCategories'],
-        Route: categoriesData[i]['Route'],
-        IconUrl: categoriesData[i]['IconUrl'],
-        Id: categoriesData[i]['Id'],
+        name: categoriesData[i]['Name'],
+        includeInTopMenu: categoriesData[i]['IncludeInTopMenu'],
+        subCategories: subCats,
+        haveSubCategories: categoriesData[i]['HaveSubCategories'],
+        id: categoriesData[i]['Id'],
       ));
     }
     return list;
