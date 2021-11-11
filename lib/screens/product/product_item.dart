@@ -80,7 +80,7 @@ class ProductItem extends StatelessWidget {
                 ],
               ),
               SizedBox(height: proportionateHeight(10)),
-              product.ratting == "NaN"
+              product.rating == "NaN"
                   ? Text("  ")
                   : Container(
                       padding: const EdgeInsets.all(4.0),
@@ -93,7 +93,7 @@ class ProductItem extends StatelessWidget {
                           Radius.circular(6),
                         ),
                       ),
-                      child: Text("${product.ratting}"),
+                      child: Text("${product.rating}"),
                     ),
             ],
           ),

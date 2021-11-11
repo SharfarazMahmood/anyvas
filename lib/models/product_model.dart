@@ -20,7 +20,7 @@ class Product with ChangeNotifier {
   ReviewOverviewModel? reviewOverviewModel;
   int id;
 
-  String get ratting {
+  String get rating {
     if (reviewOverviewModel != null) {
       double rating =
           (reviewOverviewModel!.ratingSum / reviewOverviewModel!.totalReviews);
@@ -55,33 +55,52 @@ class Product with ChangeNotifier {
         "updatecartitemid": updatecartitemid,
       });
       request.headers.addAll(HttpRequest.headers);
-
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
         var responseData = await response.stream.bytesToString();
-
-        final extractedData = json.decode(responseData) as Map<String, dynamic>;
-        final productData = extractedData['Data'] as Map;
-        name = productData['Name'];
-
-        var dpmData = productData['DefaultPictureModel'];
-        PictureModel dpm = PictureModel(
-          imageUrl: dpmData['ImageUrl'],
-          // thumbImageUrl: dpmData['ThumbImageUrl'],
-          fullSizeImageUrl: dpmData['FullSizeImageUrl'],
-          title: dpmData['Title'],
-          alternateText: dpmData['AlternateText'],
-        );
-        defaultPictureModel = dpm;
-        // log(defaultPictureModel!.imageUrl.toString());
+        await createProductObject(responseData);
         notifyListeners();
       } else {
         print(response.reasonPhrase);
       }
-    } on Exception catch (e) {
-      print(e.toString());
+    } on Exception catch (error) {
+      print(error.toString());
+      throw error;
     }
+  }
+
+  Future<void> createProductObject(String responseData) async {
+    final extractedData = json.decode(responseData) as Map<String, dynamic>;
+    final productData = extractedData['Data'] as Map;
+
+    var dpmData = productData['DefaultPictureModel'];
+    PictureModel dpm = PictureModel(
+      imageUrl: dpmData['ImageUrl'],
+      fullSizeImageUrl: dpmData['FullSizeImageUrl'],
+      title: dpmData['Title'],
+      alternateText: dpmData['AlternateText'],
+    );
+    var productPriceData = productData['ProductPrice'];
+    ProductPrice priceData = ProductPrice(
+      oldPrice: productPriceData['OldPrice'] ?? "",
+      price: productPriceData['Price'],
+      priceValue: productPriceData['PriceValue'],
+    );
+    var reviewData = productData['ProductReviewOverview'];
+    ReviewOverviewModel rom = ReviewOverviewModel(
+      ratingSum: reviewData['RatingSum'],
+      totalReviews: reviewData['TotalReviews'],
+    );
+
+    this.name = productData['Name'];
+    this.manufacturerName = productData['ProductManufacturers'][0]['Name'];
+    this.shortDescription = productData['ShortDescription'];
+    this.fullDescription = productData['FullDescription'];
+    this.defaultPictureModel = dpm;
+    this.productPrice = priceData;
+    this.reviewOverviewModel = rom;
+    this.discountName = productData['DiscountName'];
   }
 }
 
