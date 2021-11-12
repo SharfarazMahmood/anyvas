@@ -12,10 +12,12 @@ class _MainViewBodyState extends State<MainViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          NewProducts(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            NewProducts(),
+          ],
+        ),
       ),
     );
   }
