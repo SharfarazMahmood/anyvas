@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:anyvas/configs/constants.dart';
-import 'package:anyvas/models/screen_arguments.dart';
-import 'package:anyvas/screens/products_overview_screen.dart';
-import 'package:anyvas/widgets/app_drawer.dart';
-import 'package:anyvas/widgets/dropdown.dart';
+//////// import of config flies ////////
+import '../../../configs/constants.dart';
+//////// import of other screens, widgets ////////
+import '../../../models/screen_arguments.dart';
+import '../../../screens/home/main_view_body.dart';
+import '../../../screens/products_overview_screen.dart';
+import '../../../widgets/app_drawer.dart';
+import '../../../widgets/dropdown.dart';
 
 class MainView extends StatefulWidget {
   static String routeName = "/main-view";
@@ -16,8 +19,8 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   String _title = "Anyvas";
-  List<Widget> _pages = [];
-  int currentIndex = 0;
+  List<Widget> _mainViewPages = [];
+  int _currentIndex = 0;
 
   var _isLoading = false;
   var _isInit = true;
@@ -27,8 +30,8 @@ class _MainViewState extends State<MainView> {
 
   @override
   void initState() {
-    _pages = [
-      Center(child: Text(_title, style: TextStyle(fontSize: 20))),
+    _mainViewPages = [
+      MainViewBody(),
       ProductsOverviewScreen(catId: catId, catName: catName),
       Center(child: Text("Cart", style: TextStyle(fontSize: 20))),
     ];
@@ -53,7 +56,7 @@ class _MainViewState extends State<MainView> {
       }
       setState(() {
         if (isCategory != null && isCategory) {
-          currentIndex = 1;
+          _currentIndex = 1;
         }
         _isLoading = false;
       });
@@ -70,15 +73,18 @@ class _MainViewState extends State<MainView> {
         actions: <Widget>[DropDownMenu()],
       ),
       drawer: AppDrawer(),
-      body: _pages[currentIndex],
+      body: _mainViewPages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        elevation: 8,
-        currentIndex: currentIndex,
-        onTap: (index) => setState(() {
-          currentIndex = index;
-        }),
+        elevation: 10.0,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         unselectedItemColor: kSecondaryColor2,
         selectedItemColor: kSecondaryColor,
+        selectedFontSize: 15,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
