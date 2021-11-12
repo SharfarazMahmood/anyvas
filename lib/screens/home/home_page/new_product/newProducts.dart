@@ -1,3 +1,4 @@
+import 'package:anyvas/screens/home/home_page/new_product/new_product_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //////// import of config files ////////
@@ -79,7 +80,7 @@ class _NewProductsState extends State<NewProducts> {
                 )
               : Container(
                   height: proportionateHeight(250),
-                  // child: NewProductList(catId: catId,),
+                  child: NewProductList(catId: catId,),
                 ),
         ],
       ),
