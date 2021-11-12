@@ -94,7 +94,11 @@ class Product with ChangeNotifier {
     );
 
     this.name = productData['Name'];
-    this.manufacturerName = productData['ProductManufacturers'][0]['Name'];
+    try {
+      this.manufacturerName = productData['ProductManufacturers'][0]['Name'];
+    } catch (error) {
+      print('product model api call :: ${error.toString()}');
+    }
     this.shortDescription = productData['ShortDescription'];
     this.fullDescription = productData['FullDescription'];
     this.defaultPictureModel = dpm;

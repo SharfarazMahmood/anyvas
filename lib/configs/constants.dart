@@ -14,6 +14,7 @@ const kSecondaryColor = Color(0xffe99800);
 const kSecondaryColor2 = Color(0xFF979797);
 const kTextColor = Color(0xFF757575);
 const kSuccessColor = Colors.green;
+const kCurrencyColor = Colors.green;
 const socialIconBackgroundColor = Color(0xffededed);
 
 const kAnimationDuration = Duration(milliseconds: 200);

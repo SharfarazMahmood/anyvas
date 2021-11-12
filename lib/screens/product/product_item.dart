@@ -1,5 +1,7 @@
 import 'package:anyvas/configs/constants.dart';
 import 'package:anyvas/configs/size_config.dart';
+import 'package:anyvas/screens/components/ratings/RatingStars.dart';
+import 'package:anyvas/screens/components/ratings/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -59,42 +61,40 @@ class ProductItem extends StatelessWidget {
                 ),
               ),
               SizedBox(height: proportionateHeight(5)),
+              FittedBox(
+                child: Row(
+                  children: [
+                    Text(
+                      product.productPrice!.price,
+                      style: TextStyle(
+                        color: kCurrencyColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(width: proportionateWidth(5)),
+                    Text(
+                      product.productPrice!.oldPrice,
+                      style: TextStyle(
+                        fontSize: 16,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: proportionateHeight(10)),
               Row(
                 children: [
-                  Text(
-                    product.productPrice!.price,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      // fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: proportionateWidth(5)),
-                  Text(
-                    product.productPrice!.oldPrice,
-                    style: TextStyle(
-                      fontSize: 16,
-                      decoration: TextDecoration.lineThrough,
+                  product.rating == "NaN"
+                      ? Text("  ")
+                      : Rating(rating: product.rating),
+                  SizedBox(
+                    child: RatingStars(
+                      rating: product.rating,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: proportionateHeight(10)),
-              product.rating == "NaN"
-                  ? Text("  ")
-                  : Container(
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1.5,
-                          color: kSecondaryColor,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(6),
-                        ),
-                      ),
-                      child: Text("${product.rating}"),
-                    ),
             ],
           ),
         ),

@@ -62,25 +62,26 @@ class NewProductItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: proportionateHeight(5)),
-                Row(
-                  children: [
-                    Text(
-                      product.productPrice!.price,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        // fontWeight: FontWeight.bold,
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Text(
+                        product.productPrice!.price,
+                        style: TextStyle(
+                          color: kCurrencyColor,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: proportionateWidth(5)),
-                    Text(
-                      product.productPrice!.oldPrice,
-                      style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.lineThrough,
+                      SizedBox(width: proportionateWidth(5)),
+                      Text(
+                        product.productPrice!.oldPrice,
+                        style: TextStyle(
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 SizedBox(height: proportionateHeight(10)),
                 product.rating == "NaN"
