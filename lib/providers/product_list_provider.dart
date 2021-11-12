@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'package:anyvas/models/httpRequest.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 //////// import of config files ////////
 import '../models/product_model.dart';
+import 'package:anyvas/models/httpRequest.dart';
+import 'package:anyvas/models_object_create_module/createProductsList.dart';
 
 class ProductListProvider with ChangeNotifier {
   List<Product> _items = [];
@@ -26,15 +25,13 @@ class ProductListProvider with ChangeNotifier {
       if (responseData == "-1") {
         print('could not reach server !! Please try again later.');
       } else {
-        _items = await createProductObject(responseData);
+        final extractedData = json.decode(responseData) as Map<String, dynamic>;
+        final productsData =
+            extractedData['Data']['CatalogProductsModel']['Products'] as List;
+        _items = await createProductsList(productsData);
         // _items.forEach((item) {
-          // print(item.reviewOverviewModel!.ratingSum);
-          // print(item.reviewOverviewModel!.totalReviews);
-          //   print(item.productPrice!.oldPrice);
-          //   print(item.productPrice!.price);
-          //   print(item.productPrice!.priceValue);
-          // print(item.ratting);
-          // print('------------------------------');
+        //   print(item.productPrice!.price);
+        //   print('------------------------------');
         // });
         notifyListeners();
       }
@@ -63,44 +60,4 @@ Future<String> fetchFromApi(int? id) async {
     throw error;
   }
   return "-1";
-}
-
-////////// converting API resopnseData string to a product list
-Future<List<Product>> createProductObject(String responseData) async {
-  List<Product> list = [];
-  final extractedData = json.decode(responseData) as Map<String, dynamic>;
-  final productsData =
-      extractedData['Data']['CatalogProductsModel']['Products'] as List;
-
-  for (var i = 0; i < productsData.length; i++) {
-    var dpmData = productsData[i]['DefaultPictureModel'];
-    PictureModel dpm = PictureModel(
-      imageUrl: dpmData['ImageUrl'],
-      fullSizeImageUrl: dpmData['FullSizeImageUrl'],
-      title: dpmData['Title'],
-      alternateText: dpmData['AlternateText'],
-    );
-    var productPriceData = productsData[i]['ProductPrice'];
-    ProductPrice priceData = ProductPrice(
-      oldPrice: productPriceData['OldPrice'] ?? "",
-      price: productPriceData['Price'],
-      priceValue: productPriceData['PriceValue'],
-    );
-    var reviewData = productsData[i]['ReviewOverviewModel'];
-    ReviewOverviewModel rom = ReviewOverviewModel(
-      ratingSum: reviewData['RatingSum'],
-      totalReviews: reviewData['TotalReviews'],
-    );
-
-    list.add(Product(
-      name: productsData[i]['Name'],
-      discountName: productsData[i]['DiscountName'],
-      id: productsData[i]['Id'],
-      manufacturerName: productsData[i]['ManufacturerName'],
-      defaultPictureModel: dpm,
-      productPrice: priceData,
-      reviewOverviewModel: rom,
-    ));
-  }
-  return list;
 }
