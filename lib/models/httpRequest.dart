@@ -3,6 +3,7 @@ import 'dart:convert';
 class HttpRequest implements Exception {
   static String serverUrl = "http://incap.bssoln.com/api";
   // static String serverUrl = "https://anyvas.com/api";
+  static String newProductsApi = "${serverUrl}/newproducts";
   static Map<String, String> headers = {
     'NST':
         'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJOU1RfS0VZIjoidGVzdGFwaTEyM3Nha2hhdyJ9.l9txvKvpCrPsW78C9CFfUEVBbZcPpC7kBESRWBUthWjBG6dfP0YgrtoNKoe-PHExT_LGzYXoT1vvxGzWKxDGMA',
