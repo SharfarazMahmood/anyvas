@@ -1,7 +1,8 @@
 import 'package:anyvas/configs/constants.dart';
 import 'package:anyvas/configs/size_config.dart';
+import 'package:anyvas/screens/components/ratings/RatingStars.dart';
+import 'package:anyvas/screens/components/ratings/rating.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -140,34 +141,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Row(
                                 children: [
                                   SizedBox(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4.0),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1.5,
-                                          color: kSecondaryColor,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(6),
-                                        ),
-                                      ),
-                                      child: Text(
-                                          "${product!.rating != 'NaN' ? product!.rating : '0.0'}"),
+                                    child: Rating(
+                                      rating: product!.rating,
                                     ),
                                   ),
                                   SizedBox(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: RatingBarIndicator(
-                                        rating: double.parse(
-                                            "${product!.rating != 'NaN' ? product!.rating : '0.0'}"),
-                                        itemBuilder: (context, index) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        itemCount: 5,
-                                        itemSize: proportionateWidth(25),
-                                      ),
+                                    child: RatingStars(
+                                      rating: product!.rating,
                                     ),
                                   ),
                                 ],
@@ -176,7 +156,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Html(data: product!.shortDescription),
                               ),
                               Html(data: product!.fullDescription),
-                              
                             ],
                           ),
                         ),

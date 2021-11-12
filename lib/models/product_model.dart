@@ -20,16 +20,16 @@ class Product with ChangeNotifier {
   ReviewOverviewModel? reviewOverviewModel;
   int id;
 
-  String get rating {
+  double get rating {
     if (reviewOverviewModel != null) {
       double rating =
           (reviewOverviewModel!.ratingSum / reviewOverviewModel!.totalReviews);
       // print(rating);
       if (rating > 0) {
-        return (rating).toStringAsFixed(1);
+        return (rating);
       }
     }
-    return "NaN";
+    return 0.0;
   }
 
   Product({
